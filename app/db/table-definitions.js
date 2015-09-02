@@ -1,10 +1,11 @@
-var sql = require('sql');
+var sql = require('sql'),
+  tableDefinitions = require('table-definitions');
 
 sql.setDialect(process.env.DB_DIALECT);
 
 // users table definition
 var users = sql.define({
-  name: 'users',
+  name: tableDefinitions.USERS_TABLE,
   columns: ['id', 'username', 'password']
 });
 
