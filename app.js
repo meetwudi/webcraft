@@ -1,3 +1,5 @@
+require('./global-bootstrap');
+
 var express = require('express');
 var path = require('path');
 var uuid = require('node-uuid');
