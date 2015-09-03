@@ -4,7 +4,7 @@ var extend = require('extend')
 var db = {
   config: require('../config/db'),
   pg: require('pg'),
-  tableNames: require('./table-names')
+  tableNames: require('./table-structures')
 }
 
 // Merge all table definitions into db object
