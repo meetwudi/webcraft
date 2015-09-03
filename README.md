@@ -6,6 +6,12 @@
 
 io.js~3.3.0
 
+所需的全局CLI工具：
+
+- [gulp](http://gulpjs.com/)
+- [mocha](http://mochajs.org)
+- [node-db-migrate](https://github.com/db-migrate/node-db-migrate)
+
 ### 数据库migration
 
 数据库migration配置文件为`database.json`，使用[node-db-migrate](https://github.com/db-migrate/node-db-migrate)工具来进行migration管理。
@@ -21,4 +27,6 @@ node -r dotenv/config $(where db-migrate) up -e dev
 
 ### 测试
 
-测试采用[mocha](http://mochajs.org)作为test runner，若无安装mocha则需先安装。
+```
+gulp test
+```
