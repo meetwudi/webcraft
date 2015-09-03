@@ -30,7 +30,7 @@ var User = bookshelf.Model.extend({ // prototype properties
       User._comparePassword(password, encryptedPassword, function (err, passwordValid) {
         if (err) return reject(err)
         if (!passwordValid) resolve(false)
-        resolve(true, that)
+        resolve(true)
       })
     })
   }

@@ -31,18 +31,33 @@ describe('User', function () {
       dbTracker.install()
       const username = 'abc'
 
-      User.getUserByUsername('abc').then(function (user) {
+      User.getUserByUsername(username).then(function (user) {
         should.exist(user)
         user.has('username').should.be.ok()
         user.get('username').should.equal(username)
         done()
       })
+
       dbTracker.on('query', function (query) {
         query.method.should.equal('select')
         query.response([{
           id: 1,
           username: username
         }])
+      })
+    })
+
+    it('should resolves undefined if the username matches any user', function (done) {
+      dbTracker.install()
+
+      User.getUserByUsername('abc').then(function (user) {
+        should.not.exist(user)
+        done()
+      })
+
+      dbTracker.on('query', function (query) {
+        query.method.should.equal('select')
+        query.response([])
       })
     })
   })
