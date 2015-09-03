@@ -1,17 +1,17 @@
-var dbm = global.dbm || require('db-migrate');
-var type = dbm.dataType;
-var tableNames = require('../app/db/table-structures');
+var dbm = global.dbm || require('db-migrate')
+var type = dbm.dataType
+var tableNames = require('../app/db/table-structures')
 
-console.log(dbm);
+console.log(dbm)
 
-exports.up = function(db, callback) {
+exports.up = function (db, callback) {
   db.createTable(tableNames.USERS_TABLE, {
-    id: { type: type.INTEGER, primaryKey: true, },
+    id: { type: type.INTEGER, primaryKey: true },
     username: type.STRING,
-    password: type.STRING,
-  }, callback);
-};
+    password: type.STRING
+  }, callback)
+}
 
-exports.down = function(db, callback) {
-  db.dropTable(tableNames.USERS_TABLE, callback);
-};
+exports.down = function (db, callback) {
+  db.dropTable(tableNames.USERS_TABLE, callback)
+}

@@ -1,13 +1,13 @@
-var tableDefinitions = require('./table-definitions'),
-  extend = require('extend');
+var tableDefinitions = require('./table-definitions')
+var extend = require('extend')
 
 var db = {
   config: require('../config/db'),
   pg: require('pg'),
-  tableNames: require('./table-names'),
-};
+  tableNames: require('./table-names')
+}
 
 // Merge all table definitions into db object
-extend(db, tableDefinitions);
+extend(db, tableDefinitions)
 
-module.exports = db;
+module.exports = db

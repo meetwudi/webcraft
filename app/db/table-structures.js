@@ -4,4 +4,4 @@ module.exports = {
   // users table
   USERS_TABLE: 'users',
   USERS_TABLE_COLUMNS: ['id', 'username', 'password']
-};
+}

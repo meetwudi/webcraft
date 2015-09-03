@@ -10,8 +10,17 @@ gulp.task('standardTest:tests', function () {
     .pipe(standard.reporter('default'))
 })
 
+gulp.task('standardTest:nodeApp', function () {
+  return gulp.src(['./app/**/*.js', './migrations/**/*.js'])
+    .pipe(standard({
+      globals: ['require', 'process']
+    }))
+    .pipe(standard.reporter('default'))
+})
+
 gulp.task('standardTest', function () {
   gulp.run('standardTest:tests')
+  gulp.run('standardTest:nodeApp')
 })
 
 gulp.task('mochaTest', function () {
