@@ -17,6 +17,14 @@ var knexInstance = new Knex({
   }
 })
 
+// Mock database in testing environment
+if (process.env.NODE_ENV === 'test') {
+  var mockDB = require('mock-knex')
+  mockDB.setAdapter(`knex@${knexInstance.VERSION}`)
+  mockDB.mock(knexInstance)
+  console.log('Knex is now mocked :)')
+}
+
 var bookshelf = require('bookshelf')(knexInstance)
 
 module.exports = {
