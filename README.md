@@ -17,3 +17,8 @@ node -r dotenv/config $(where db-migrate) up -e dev
 ```
 
 对数据库结构进行修改的时候，**应该同时修改app/db/sql.js中的定义**。
+
+
+### 测试
+
+测试采用[mocha](http://mochajs.org)作为test runner，若无安装mocha则需先安装。
