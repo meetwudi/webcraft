@@ -1,13 +1,6 @@
 #!/usr/bin/env node
 
 /**
- * Bootstrap dotenv
- *
- * dotenv allows we to utilize .env file to expose application specific environment variables.
- */
-require('dotenv').load();
-
-/**
  * Module dependencies.
  */
 
