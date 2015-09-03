@@ -1,12 +1,12 @@
 var sql = require('sql'),
-  tableDefinitions = require('table-definitions');
+  tableStructures = require('./table-structures');
 
 sql.setDialect(process.env.DB_DIALECT);
 
 // users table definition
 var users = sql.define({
-  name: tableDefinitions.USERS_TABLE,
-  columns: ['id', 'username', 'password']
+  name: tableStructures.USERS_TABLE,
+  columns: tableStructures.USERS_TABLE_COLUMNS
 });
 
 module.exports = {
