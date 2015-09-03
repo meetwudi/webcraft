@@ -7,7 +7,7 @@ describe('_comparePassword', function () {
     const encryptedPassword = bcrypt.hashSync('abc')
     localStrategy._comparePassword(password, encryptedPassword, function (err, passwordValid) {
       if (err) done(err)
-      passwordValid.should.be.ok
+      passwordValid.should.be.ok()
       done()
     })
   })
