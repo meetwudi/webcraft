@@ -4,7 +4,7 @@
  */
 
 var LocalStrategy = require('passport-local').Strategy
-var db = appRequire('app/db')
+var User = appRequire('app/models/User')
 var bcrypt = require('bcrypt-nodejs')
 
 /**
@@ -12,23 +12,20 @@ var bcrypt = require('bcrypt-nodejs')
  * @public
  */
 var localStrategy = new LocalStrategy(function (username, password, done) {
-  db.pg.connect(db.config.CONN_STRING, function (err, client, done) {
-    if (err) return done(err, false, { message: 'Internal error' })
-    client.query(db.users.select().where(
-      db.users.username.equals(username)
-    ).toQuery().text, function (err, results) {
-      if (err) return done(err, false, { message: 'Internal error' })
-      // No such user
-      if (!results.rows.length) return done(null, false, { message: 'Wrong username or password' })
-      // Compare password
-      _comparePassword(password, results.rows[0].password, function (err, passwordValid) {
-        if (err) return done(err, false, { message: 'Internal error' })
-        if (!passwordValid) return done(null, false, { message: 'Wrong username or password' })
-        // TODO: Apply model here
-        done(null, results.rows[0])
+  User.collection()
+    .query()
+    .where({ username: username })
+    .fetchOne()
+    .then(function (user) {
+      var encryptedPassword = user.get('password')
+      _comparePassword(password, encryptedPassword, function (err, passwordValid) {
+        if (err) return done(err, false, 'Internal error')
+        if (!passwordValid) return done(null, false, 'Incorrect password')
+        done(null, user)
       })
+    }, function (err) {
+      done(err, false, 'Internal error')
     })
-  })
 })
 
 /**
