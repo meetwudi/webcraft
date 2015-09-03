@@ -1,6 +1,6 @@
 var dbm = global.dbm || require('db-migrate');
 var type = dbm.dataType;
-var tableNames = require('./constants/table-names');
+var tableNames = require('../app/db/table-structures');
 
 console.log(dbm);
 
