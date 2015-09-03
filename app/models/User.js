@@ -24,12 +24,13 @@ var User = bookshelf.Model.extend({ // prototype properties
    * @return {Promise}
    */
   validatePassword: function (password) {
+    var that = this
     return new Promise(function (resolve, reject) {
-      var encryptedPassword = this.get('password')
+      var encryptedPassword = that.get('password')
       User._comparePassword(password, encryptedPassword, function (err, passwordValid) {
         if (err) return reject(err)
         if (!passwordValid) resolve(false)
-        resolve(true, this)
+        resolve(true, that)
       })
     })
   }
