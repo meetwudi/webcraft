@@ -1,3 +1,5 @@
+require('./global-bootstrap')
+
 var gulp = require('gulp')
 var mocha = require('gulp-mocha')
 var standard = require('gulp-standard')
@@ -13,7 +15,7 @@ gulp.task('standardTest:tests', function () {
 gulp.task('standardTest:nodeApp', function () {
   return gulp.src(['./app/**/*.js', './migrations/**/*.js'])
     .pipe(standard({
-      globals: ['require', 'process']
+      globals: ['require', 'process', 'appRequire']
     }))
     .pipe(standard.reporter('default'))
 })
@@ -26,7 +28,7 @@ gulp.task('standardTest', function () {
 gulp.task('mochaTest', function () {
   return gulp.src('./tests/**/*-spec.js')
     .pipe(mocha({
-      require: ['should', './global-bootstrap.js']
+      require: ['should', './global-bootstrap']
     }))
 })
 

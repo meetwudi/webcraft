@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node --require global-bootstrap.js ./bin/www",
+    "start": "node ./bin/www",
     "test": "gulp test"
   },
   "dependencies": {
@@ -16,6 +16,7 @@
     "express": "~4.13.1",
     "express-session": "^1.11.3",
     "extend": "^3.0.0",
+    "gulp-jsdoc": "^0.1.4",
     "hbs": "~3.1.0",
     "knex": "^0.8.6",
     "morgan": "~1.6.1",
