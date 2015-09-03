@@ -1,4 +1,4 @@
-var localStrategy = appRequire('app/strategies/local-strategy')
+var localStrategy = appRequire('app/auth/local-strategy')
 var bcrypt = require('bcrypt-nodejs')
 
 describe('_comparePassword', function () {
