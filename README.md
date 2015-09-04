@@ -22,7 +22,7 @@ io.js~3.3.0
 node -r dotenv/config $(where db-migrate) up -e dev
 ```
 
-对数据库结构进行修改的时候，**应该同时修改app/db/sql.js中的定义**。
+对数据库结构进行修改的时候，**应该同时修改app/config/database.js中的定义**。
 
 
 ### 测试
