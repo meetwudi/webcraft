@@ -7,7 +7,7 @@ var standard = require('gulp-standard')
 gulp.task('standardTest:tests', function () {
   return gulp.src('./tests/**/*-spec.js')
     .pipe(standard({
-      globals: ['appRequire', 'describe', 'it', 'should']
+      globals: ['appRequire', 'describe', 'it', 'should', 'beforeEach']
     }))
     .pipe(standard.reporter('default'))
 })

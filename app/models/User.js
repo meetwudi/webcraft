@@ -8,6 +8,8 @@ var bookshelf = appRequire('app/init/database').bookshelf
 var databaseConfig = appRequire('app/config/database')
 var bcrypt = require('bcrypt-nodejs')
 var Promise = require('bluebird')
+var validator = require('validator')
+var dataRules = appRequire('app/config/data-rules')
 
 /**
  * User ORM class
@@ -35,6 +37,14 @@ var User = bookshelf.Model.extend({ // prototype properties
     })
   }
 }, { // Class properties
+
+  /**
+   * Compare raw password with encrypted password to determine if they are equal
+   *
+   * @private
+   */
+  _comparePassword: bcrypt.compare,
+
   /**
    * Find a user by its username
    *
@@ -48,24 +58,39 @@ var User = bookshelf.Model.extend({ // prototype properties
   },
 
   /**
-   * Callback called when passwords are compared
+   * Register an new user
    *
-   * @private
-   * @callback comparePasswordCallback
-   * @param {Error|null} err - Error
-   * @param {boolean} passwordValid - Whether the passwords are the same
+   * @param {object} attrs - Attributes of the user model
+   * @param {string} confirmedPassword
    */
-  /**
-   * Compare raw password with encrypted password to determine if they are equal
-   *
-   * @private
-   * @param  {string} password - raw password
-   * @param  {string} encrypted - encrypted password
-   * @param {comparePasswordCallback} callback - Callback called when passwords are compared
-   * @return {boolean}
-   */
-  _comparePassword: function (password, encryptedPassowrd, callback) {
-    bcrypt.compare(password, encryptedPassowrd, callback)
+  registerUser: function (attrs, confirmedPassword) {
+    return new Promise(function (resolve, reject) {
+      if (!validator.equals(attrs.password, confirmedPassword)) {
+        return reject(new Error('Password does not match confirmed password'))
+      }
+      if (!validator.isAlphanumeric(attrs.password)) {
+        return reject(new Error('Password should be alphanumeric'))
+      }
+      if (!validator.isLength(attrs.password, dataRules.PASSWORD_MIN_LENGTH, dataRules.PASSWORD_MAX_LENGTH)) {
+        return reject(new Error(`Password length should be within ${dataRules.PASSWORD_MIN_LENGTH} and ${dataRules.PASSWORD_MAX_LENGTH}`))
+      }
+      if (!validator.isAlphanumeric(attrs.username)) {
+        return reject(new Error('Username should be alphanumeric'))
+      }
+      if (!validator.isLength(attrs.username, dataRules.USERNAME_MIN_LENGTH, dataRules.USERNAME_MAX_LENGTH)) {
+        return reject(new Error(`Username length should be within ${dataRules.USERNAME_MIN_LENGTH} and ${dataRules.USERNAME_MAX_LENGTH}`))
+      }
+
+      // TODO: investigate better coding style for this
+      // Ensure username is unique
+      User.count({ username: attrs.username })
+        .then(function (count) {
+          if (count > 0) reject(new Error('Username exists'))
+          attrs.password = bcrypt.hashSync(attrs.password)
+          var user = new User(attrs)
+          return user.save()
+        }).then(resolve, reject)
+    })
   }
 })
 

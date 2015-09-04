@@ -61,6 +61,95 @@ describe('User', function () {
       })
     })
   })
+
+  describe('registerUser', function () {
+    beforeEach(function () {
+      dbTracker.install()
+    })
+
+    it('should register user and return the user model when infos are valid', function (done) {
+      var password = 'abcddd'
+      var attrs = {
+        username: 'johndd',
+        password: password
+      }
+      User.registerUser(attrs, attrs.password)
+        .then(function (user) {
+          should.exist(user)
+          should(user instanceof User).be.ok()
+          user.get('username').should.equal(attrs.username)
+          // password should be encrypted!
+          bcrypt.compareSync(password, user.get('password')).should.be.ok
+          done()
+        }, function (err) {
+          should.not.exist(err)
+        })
+      dbTracker.on('query', function (query) {
+        if (query.method === 'insert') {
+          query.response(1)
+        }
+        if (query.method === 'select') {
+          query.response([{ count: 0 }])
+        }
+      })
+    })
+
+    it('should reject when username exists', function (done) {
+      var attrs = {
+        username: 'johndd',
+        password: 'password'
+      }
+      User.registerUser(attrs, attrs.password)
+        .then(function (user) {
+          throw Error('Should not be called')
+        }, function (err) {
+          should.exist(err)
+          done()
+        })
+      dbTracker.on('query', function (query) {
+        if (query.method === 'select') {
+          query.response([{ count: 1 }])
+        }
+      })
+    })
+
+    it('should reject when password does not match confirmedPassword', function (done) {
+      var attrs = {
+        username: 'johnnn',
+        password: 'johnnn'
+      }
+      User.registerUser(attrs, 'abcddd')
+        .then(function () {
+          throw new Error('should not be called')
+        }, function (err) {
+          should.exist(err)
+          err.message.should.equal('Password does not match confirmed password')
+          done()
+        })
+    })
+
+    it('should reject when username/password format is not correct', function (done) {
+      var attrsForTesting = [
+        { username: 'joh', password: 'abcwwee' },
+        { username: 'johnnmnnnnnnnnnbnbnbnbnbnbnbnbnn', password: 'abcwwee' },
+        { username: 'johnnmn', password: 'abc' },
+        { username: 'johnnmn', password: 'johnnmnnnnnnnnnbnbnbnbnbnbnbnbnn' }
+      ]
+      Promise.all(attrsForTesting.map(function (attrs) {
+        return User.registerUser(attrs, attrs.password)
+          .then(function () {
+            throw Error('should not be called')
+          }, function (err) {
+            should.exist(err)
+          })
+      })).then(function (results) {
+        results.forEach(function (result) {
+          should.not.exist(result)
+        })
+        done()
+      })
+    })
+  })
 })
 
 describe('user', function () {
