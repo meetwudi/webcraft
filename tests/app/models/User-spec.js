@@ -124,7 +124,6 @@ describe('User Model', function () {
           throw new Error('should not be called')
         }, function (err) {
           should.exist(err)
-          err.message.should.equal('Password does not match confirmed password')
           done()
         })
     })

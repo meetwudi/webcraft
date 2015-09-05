@@ -7,8 +7,8 @@ var bookshelf = appRequire('app/init/database').bookshelf
 var databaseConfig = appRequire('app/config/database')
 var bcrypt = require('bcrypt-nodejs')
 var Promise = require('bluebird')
-var validator = require('validator')
 var dataRules = appRequire('app/config/data-rules')
+var Checkit = require('checkit')
 var Project
 
 /**
@@ -52,6 +52,10 @@ var User = bookshelf.Model.extend({ // prototype properties
         resolve(true)
       })
     })
+  },
+
+  validateSave: function (attrs) {
+    return User.getRules.run(attrs)
   }
 }, { // Class properties
 
@@ -83,22 +87,6 @@ var User = bookshelf.Model.extend({ // prototype properties
    */
   registerUser: function (attrs, confirmedPassword) {
     return new Promise(function (resolve, reject) {
-      if (!validator.equals(attrs.password, confirmedPassword)) {
-        return reject(new Error('Password does not match confirmed password'))
-      }
-      if (!validator.isAlphanumeric(attrs.password)) {
-        return reject(new Error('Password should be alphanumeric'))
-      }
-      if (!validator.isLength(attrs.password, dataRules.PASSWORD_MIN_LENGTH, dataRules.PASSWORD_MAX_LENGTH)) {
-        return reject(new Error(`Password length should be within ${dataRules.PASSWORD_MIN_LENGTH} and ${dataRules.PASSWORD_MAX_LENGTH}`))
-      }
-      if (!validator.isAlphanumeric(attrs.username)) {
-        return reject(new Error('Username should be alphanumeric'))
-      }
-      if (!validator.isLength(attrs.username, dataRules.USERNAME_MIN_LENGTH, dataRules.USERNAME_MAX_LENGTH)) {
-        return reject(new Error(`Username length should be within ${dataRules.USERNAME_MIN_LENGTH} and ${dataRules.USERNAME_MAX_LENGTH}`))
-      }
-
       // TODO: investigate better coding style for this
       // Ensure username is unique
       User.count({ username: attrs.username })
@@ -109,7 +97,19 @@ var User = bookshelf.Model.extend({ // prototype properties
           return user.save()
         }).then(resolve, reject)
     })
-  }
+  },
+
+  getRules: new Checkit({
+    id: 'integer',
+    username: ['required',
+      `maxLength:${dataRules.USERNAME_MAX_LENGTH}`,
+      `minLength:${dataRules.USERNAME_MIN_LENGTH}`,
+      'alphaNumeric'],
+    password: ['required',
+      `maxLength:${dataRules.PASSWORD_MAX_LENGTH}`,
+      `minLength:${dataRules.PASSWORD_MIN_LENGTH}`,
+      'alphaNumeric']
+  })
 })
 
 User = bookshelf.model('User', User)
