@@ -9,7 +9,7 @@ var bcrypt = require('bcrypt-nodejs')
 var Promise = require('bluebird')
 var validator = require('validator')
 var dataRules = appRequire('app/config/data-rules')
-var Project;
+var Project
 
 /**
  * User ORM class

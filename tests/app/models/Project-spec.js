@@ -1,5 +1,4 @@
 var Project = appRequire('app/models/Project')
-var User = appRequire('app/models/User')
 var dbTracker = require('mock-knex').getTracker()
 var should = require('should')
 var dataRules = appRequire('app/config/data-rules')
@@ -29,10 +28,10 @@ describe('Project Model', function () {
       dbTracker.install()
       dbTracker.on('query', function (query) {
         if (query.method === 'insert') {
-          return query.response([{ id: 1}])
+          return query.response([{ id: 1 }])
         }
         if (query.sql === 'select "users".* from "users" where "users"."id" = ? limit ?') {
-          return query.response([{ id: 1, username: "abc" }])
+          return query.response([{ id: 1, username: 'abc' }])
         }
         if (query.sql === 'select count(*) as "count" from "projects"') {
           return query.response([{ count: 0 }])

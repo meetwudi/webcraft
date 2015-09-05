@@ -5,13 +5,12 @@
 var bookshelf = appRequire('app/init/database').bookshelf
 var databaseConfig = appRequire('app/config/database')
 var randomString = require('randomstring')
-var validator = require('validator')
 var dataRules = appRequire('app/config/data-rules')
 var Promise = require('bluebird')
-var User;
+var User
 
 var Project = bookshelf.Model.extend({
-  tableName: databaseConfig.PROJECTS_TABLE,
+  tableName: databaseConfig.PROJECTS_TABLE
 }, {
   /**
    * Generate a project name for the user
@@ -23,7 +22,7 @@ var Project = bookshelf.Model.extend({
       function generate () {
         var projectName = randomString.generate(dataRules.DEFAULT_PROJECT_NAME_LENGTH)
         return user.hasProjectName(projectName).then(function (hasProjectName) {
-          if (hasProjectName) return generate.call(null, user)
+          if (hasProjectName) return generate(user)
           else return projectName
         })
       }

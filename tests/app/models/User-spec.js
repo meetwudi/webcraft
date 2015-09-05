@@ -181,10 +181,22 @@ describe('User Model', function () {
       dbTracker.install()
       dbTracker.on('query', function (query) {
         query.method.should.equal('select')
+        query.response([{ count: 1 }])
+      })
+      new User().hasProjectName().then(function (hasProjectName) {
+        hasProjectName.should.be.exactly(true)
+        done()
+      })
+    })
+
+    it('should return false if the project name does not exist for the user', function (done) {
+      dbTracker.install()
+      dbTracker.on('query', function (query) {
+        query.method.should.equal('select')
         query.response([{ count: 0 }])
       })
-      User.hasProjectName().then(function (hasProjectName) {
-        hasProjectName.should.be.exactly(true)
+      new User().hasProjectName().then(function (hasProjectName) {
+        hasProjectName.should.be.exactly(false)
         done()
       })
     })
