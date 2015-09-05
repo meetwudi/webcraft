@@ -32,14 +32,37 @@ describe('POST /endpoints/login', function () {
       })
   })
 
-  it('should redirect to /login if user fails to login', function (done) {
+  it('should redirect to /login if user provides wrong password', function (done) {
+    var username = 'johnwu'
+    var password = 'damn good password'
+    dbTracker.install()
+    dbTracker.on('query', function (query) {
+      query.method.should.equal('select')
+      query.response([ { id: 1, username: username, password: bcrypt.hashSync('something else') } ])
+    })
+    request(app)
+      .post('/endpoints/login')
+      .send({
+        username: username,
+        password: password
+      })
+      // Redirected
+      .expect(302)
+      .end(function (err, res) {
+        should.not.exist(err)
+        res.header.location.should.equal('/login')
+        done()
+      })
+  })
+
+  it('should redirect to /login if user provides wrong username', function (done) {
     var username = 'johnwu'
     var password = 'damn good password'
     var encryptedPassword = bcrypt.hashSync(password)
     dbTracker.install()
     dbTracker.on('query', function (query) {
       query.method.should.equal('select')
-      query.response([ { id: 1, username: username, password: bcrypt.hashSync('something else') } ])
+      query.response([ { id: 1, username: username + 'x', password: encryptedPassword } ])
     })
     request(app)
       .post('/endpoints/login')
