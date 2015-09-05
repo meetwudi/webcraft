@@ -24,7 +24,6 @@ describe('POST /endpoints/login', function () {
       .expect(302)
       .end(function (err, res) {
         should.not.exist(err)
-        console.log(res)
         res.header.location.should.equal('/')
         res.header['set-cookie'].should.be.ok()
         res.header['set-cookie'][0].should.match(/^jwt/)

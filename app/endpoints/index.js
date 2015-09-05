@@ -9,6 +9,7 @@ passport.use(localStrategy)
 router.post('/login',
   function (req, res, next) {
     passport.authenticate('local', function (err, user) {
+      if (err) next(err)
       req.user = user
       next()
     })(req, res, next)
