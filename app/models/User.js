@@ -3,13 +3,13 @@
  *
  * @module app/models/User
  */
-
 var bookshelf = appRequire('app/init/database').bookshelf
 var databaseConfig = appRequire('app/config/database')
 var bcrypt = require('bcrypt-nodejs')
 var Promise = require('bluebird')
 var validator = require('validator')
 var dataRules = appRequire('app/config/data-rules')
+var Project;
 
 /**
  * User ORM class
@@ -18,6 +18,23 @@ var dataRules = appRequire('app/config/data-rules')
  */
 var User = bookshelf.Model.extend({ // prototype properties
   tableName: databaseConfig.USERS_TABLE,
+
+  /**
+   * Check whether user has a project with the name (projectName)
+   * @param  {string}  projectName - project name to check with
+   * @return {Promise}
+   */
+  hasProjectName: function (projectName) {
+    return this.projects().count({
+      name: projectName
+    }).then(function (count) {
+      return count > 0
+    })
+  },
+
+  projects: function () {
+    return this.hasMany(Project)
+  },
 
   /**
    *  Validate password for current user
@@ -35,15 +52,6 @@ var User = bookshelf.Model.extend({ // prototype properties
         resolve(true)
       })
     })
-  },
-
-  /**
-   * Check whether user has a project with the name (projectName)
-   * @param  {string}  projectName - project name to check with
-   * @return {Promise}
-   */
-  hasProjectName: function (projectName) {
-
   }
 }, { // Class properties
 
@@ -103,5 +111,8 @@ var User = bookshelf.Model.extend({ // prototype properties
     })
   }
 })
+
+User = bookshelf.model('User', User)
+Project = bookshelf.model('Project') || appRequire('app/models/Project')
 
 module.exports = User

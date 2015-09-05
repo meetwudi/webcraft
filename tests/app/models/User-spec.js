@@ -33,6 +33,7 @@ describe('User Model', function () {
 
       User.getUserByUsername(username).then(function (user) {
         should.exist(user)
+        user.should.be.an.instanceOf(User)
         user.has('username').should.be.ok()
         user.get('username').should.equal(username)
         done()
@@ -172,6 +173,20 @@ describe('User Model', function () {
           isPasswordValid.should.not.be.ok()
           done()
         })
+    })
+  })
+
+  describe('#hasProjectName', function () {
+    it('should return true if the project name exists for the user', function (done) {
+      dbTracker.install()
+      dbTracker.on('query', function (query) {
+        query.method.should.equal('select')
+        query.response([{ count: 0 }])
+      })
+      User.hasProjectName().then(function (hasProjectName) {
+        hasProjectName.should.be.exactly(true)
+        done()
+      })
     })
   })
 })

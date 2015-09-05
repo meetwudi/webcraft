@@ -26,6 +26,7 @@ if (process.env.NODE_ENV === 'test') {
 }
 
 var bookshelf = require('bookshelf')(knexInstance)
+bookshelf.plugin('registry')
 
 module.exports = {
   bookshelf: bookshelf
