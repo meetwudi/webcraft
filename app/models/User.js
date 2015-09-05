@@ -86,7 +86,7 @@ var User = bookshelf.Model.extend({ // prototype properties
    * @return {Promise}
    */
   getUserByUsername: function (username) {
-    return User.where({ username: username })
+    return new User({ username: username })
       .fetch()
   },
 

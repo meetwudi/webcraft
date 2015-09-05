@@ -18,6 +18,7 @@ var NotFoundError = appRequire('app/init/database').bookshelf.Model.NotFoundErro
 var _authenticateUser = function (username, password, done) {
   User.getUserByUsername()
     .then(function (user) {
+      if (!user) return done(null, false, 'Wrong username')
       // Validate password
       user.validatePassword(password)
         .then(function (isPasswordValid) {
@@ -27,10 +28,7 @@ var _authenticateUser = function (username, password, done) {
           return done(err, false, 'Internal error')
         })
     }, function (err) {
-      if (typeof err instanceof NotFoundError) {
-        return done(err, false, 'Incorrect')
-      }
-      else return done(err, false, 'Internal error')
+      return done(err, false, 'Internal error')
     })
 }
 

@@ -62,7 +62,7 @@ describe('POST /endpoints/login', function () {
     dbTracker.install()
     dbTracker.on('query', function (query) {
       query.method.should.equal('select')
-      query.response([ { id: 1, username: username + 'x', password: encryptedPassword } ])
+      query.response([])
     })
     request(app)
       .post('/endpoints/login')
