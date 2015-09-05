@@ -6,5 +6,8 @@ module.exports = {
   USERS_TABLE_COLUMNS: ['id', 'username', 'password'],
   // projects table
   PROJECTS_TABLE: 'projects',
-  RROJECTS_TABLE_COLUMNS: ['id', 'name', 'user_id']
+  RROJECTS_TABLE_COLUMNS: ['id', 'name', 'user_id'],
+  // docs table (documents)
+  DOCS_TABLE: 'docs',
+  DOCS_TABLE_COLUMNS: ['id', 'project_id', 'content', 'title']
 }
