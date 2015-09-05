@@ -3,8 +3,8 @@ var dbTracker = require('mock-knex').getTracker()
 var bcrypt = require('bcrypt-nodejs')
 var should = require('should')
 
-describe('User', function () {
-  describe('_comparePassword', function () {
+describe('User Model', function () {
+  describe('._comparePassword', function () {
     it('should output true when raw password matches encrypted password', function (done) {
       const password = 'abc'
       const encryptedPassword = bcrypt.hashSync('abc')
@@ -26,7 +26,7 @@ describe('User', function () {
     })
   })
 
-  describe('getUserByUsername', function () {
+  describe('.getUserByUsername', function () {
     it('should resolves a correct user if the username matches any user', function (done) {
       dbTracker.install()
       const username = 'abc'
@@ -62,7 +62,7 @@ describe('User', function () {
     })
   })
 
-  describe('registerUser', function () {
+  describe('.registerUser', function () {
     beforeEach(function () {
       dbTracker.install()
     })
@@ -152,8 +152,8 @@ describe('User', function () {
   })
 })
 
-describe('user', function () {
-  describe('validatePassword', function () {
+describe('User Model', function () {
+  describe('#validatePassword', function () {
     it('should resolve true when passwords match', function (done) {
       const password = 'abc'
       User.forge({ id: 1, username: 'diwu', password: bcrypt.hashSync(password) })
