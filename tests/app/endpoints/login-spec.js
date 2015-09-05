@@ -58,8 +58,7 @@ describe('POST /endpoints/login', function () {
   it('should redirect to /login if user provides wrong username', function (done) {
     var username = 'johnwu'
     var password = 'damn good password'
-    var encryptedPassword = bcrypt.hashSync(password)
-    dbTracker.install()
+    console.log(dbTracker)
     dbTracker.on('query', function (query) {
       query.method.should.equal('select')
       query.response([])

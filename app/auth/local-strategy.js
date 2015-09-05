@@ -5,7 +5,6 @@
 
 var LocalStrategy = require('passport-local').Strategy
 var User = appRequire('app/models/User')
-var NotFoundError = appRequire('app/init/database').bookshelf.Model.NotFoundError
 
 /**
  * Authenticate user
