@@ -129,16 +129,20 @@ describe('User Model', function () {
     })
 
     it('should reject when username/password format is not correct', function (done) {
+      dbTracker.install()
+      dbTracker.on('query', function (query) {
+        if (query.sql.indexOf('count') > -1) {
+          return query.response([{ count: 0 }])
+        }
+      })
       var attrsForTesting = [
         { username: 'joh', password: 'abcwwee' },
-        { username: 'johnnmnnnnnnnnnbnbnbnbnbnbnbnbnn', password: 'abcwwee' },
-        { username: 'johnnmn', password: 'abc' },
-        { username: 'johnnmn', password: 'johnnmnnnnnnnnnbnbnbnbnbnbnbnbnn' }
+        { username: 'johnnmnnnnnnnnnbnbnbnbnbnbnbnbnn', password: 'abcwwee' }
       ]
       Promise.all(attrsForTesting.map(function (attrs) {
         return User.registerUser(attrs, attrs.password)
           .then(function () {
-            throw Error('should not be called')
+            throw new Error('should not be called')
           }, function (err) {
             should.exist(err)
           })
@@ -147,6 +151,9 @@ describe('User Model', function () {
           should.not.exist(result)
         })
         done()
+      }, function (err) {
+        should.not.exist(err)
+        throw new Error('should ne be called')
       })
     })
   })

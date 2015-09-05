@@ -32,6 +32,10 @@ var User = bookshelf.Model.extend({ // prototype properties
     })
   },
 
+  initialize: function () {
+    this.on('saving', this.validateSave)
+  },
+
   projects: function () {
     return this.hasMany(Project)
   },
@@ -54,8 +58,8 @@ var User = bookshelf.Model.extend({ // prototype properties
     })
   },
 
-  validateSave: function (attrs) {
-    return User.getRules.run(attrs)
+  validateSave: function () {
+    return User.getRules.run(this.attributes)
   }
 }, { // Class properties
 
@@ -105,10 +109,7 @@ var User = bookshelf.Model.extend({ // prototype properties
       `maxLength:${dataRules.USERNAME_MAX_LENGTH}`,
       `minLength:${dataRules.USERNAME_MIN_LENGTH}`,
       'alphaNumeric'],
-    password: ['required',
-      `maxLength:${dataRules.PASSWORD_MAX_LENGTH}`,
-      `minLength:${dataRules.PASSWORD_MIN_LENGTH}`,
-      'alphaNumeric']
+    password: ['required']
   })
 })
 
