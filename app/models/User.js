@@ -35,6 +35,15 @@ var User = bookshelf.Model.extend({ // prototype properties
         resolve(true)
       })
     })
+  },
+
+  /**
+   * Check whether user has a project with the name (projectName)
+   * @param  {string}  projectName - project name to check with
+   * @return {Promise}
+   */
+  hasProjectName: function (projectName) {
+
   }
 }, { // Class properties
 
@@ -62,6 +71,7 @@ var User = bookshelf.Model.extend({ // prototype properties
    *
    * @param {object} attrs - Attributes of the user model
    * @param {string} confirmedPassword
+   * @return {Promise}
    */
   registerUser: function (attrs, confirmedPassword) {
     return new Promise(function (resolve, reject) {
