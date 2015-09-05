@@ -2,7 +2,7 @@ var dbm = global.dbm || require('db-migrate')
 var type = dbm.dataType
 var databaseConfig = require('../app/config/database')
 
-exports.up = function(db, callback) {
+exports.up = function (db, callback) {
   db.createTable(databaseConfig.DOCS_TABLE, {
     id: { type: type.INTEGER, primaryKey: true, autoIncrement: true },
     project_id: {
@@ -21,6 +21,6 @@ exports.up = function(db, callback) {
   }, callback)
 }
 
-exports.down = function(db, callback) {
+exports.down = function (db, callback) {
   callback()
 }

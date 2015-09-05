@@ -8,9 +8,18 @@ var randomString = require('randomstring')
 var dataRules = appRequire('app/config/data-rules')
 var Promise = require('bluebird')
 var User
+var Doc
 
 var Project = bookshelf.Model.extend({
-  tableName: databaseConfig.PROJECTS_TABLE
+  tableName: databaseConfig.PROJECTS_TABLE,
+
+  docs: function () {
+    return this.hasMany(Doc)
+  },
+
+  user: function () {
+    return this.belongsTo(User)
+  }
 }, {
   /**
    * Generate a project name for the user
@@ -62,5 +71,6 @@ var Project = bookshelf.Model.extend({
 
 Project = bookshelf.model('Project', Project)
 User = bookshelf.model('User') || appRequire('app/models/User')
+Doc = bookshelf.model('Doc') || appRequire('app/models/Doc')
 
 module.exports = Project
