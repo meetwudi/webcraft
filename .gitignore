@@ -31,3 +31,6 @@ npm-debug.log
 
 # Ignore .env
 .env
+
+# Test coverage result
+converage/
