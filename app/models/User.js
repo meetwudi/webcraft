@@ -9,6 +9,7 @@ var bcrypt = require('bcrypt-nodejs')
 var Promise = require('bluebird')
 var dataRules = appRequire('app/config/data-rules')
 var Checkit = require('checkit')
+var jwt = require('jsonwebtoken')
 var Project
 
 /**
@@ -18,6 +19,13 @@ var Project
  */
 var User = bookshelf.Model.extend({ // prototype properties
   tableName: databaseConfig.USERS_TABLE,
+
+  getJWT: function () {
+    var token = jwt.sign({
+      user_id: this.get('id')
+    }, process.env.JWT_SECRET)
+    return token
+  },
 
   /**
    * Check whether user has a project with the name (projectName)
