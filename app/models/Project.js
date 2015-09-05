@@ -62,10 +62,6 @@ var Project = bookshelf.Model.extend({
         }, reject)
         .then(resolve, reject)
     })
-  },
-
-  user: function () {
-    return this.belongsTo(User)
   }
 })
 
