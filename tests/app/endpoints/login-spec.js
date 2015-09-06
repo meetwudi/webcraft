@@ -4,7 +4,7 @@ var request = require('supertest')
 var bcrypt = require('bcrypt-nodejs')
 var should = require('should')
 
-describe('POST /endpoints/login', function () {
+describe('POST /endpoints/session', function () {
   it('should store a valid jwt token in cookie when successful login', function (done) {
     var username = 'johnwu'
     var password = 'damn good password'
@@ -15,7 +15,7 @@ describe('POST /endpoints/login', function () {
       query.response([ { id: 1, username: username, password: encryptedPassword } ])
     })
     request(app)
-      .post('/endpoints/login')
+      .post('/endpoints/session')
       .send({
         username: username,
         password: password
@@ -41,7 +41,7 @@ describe('POST /endpoints/login', function () {
       query.response([ { id: 1, username: username, password: bcrypt.hashSync('something else') } ])
     })
     request(app)
-      .post('/endpoints/login')
+      .post('/endpoints/session')
       .send({
         username: username,
         password: password
@@ -58,13 +58,12 @@ describe('POST /endpoints/login', function () {
   it('should redirect to /login if user provides wrong username', function (done) {
     var username = 'johnwu'
     var password = 'damn good password'
-    console.log(dbTracker)
     dbTracker.on('query', function (query) {
       query.method.should.equal('select')
       query.response([])
     })
     request(app)
-      .post('/endpoints/login')
+      .post('/endpoints/session')
       .send({
         username: username,
         password: password
