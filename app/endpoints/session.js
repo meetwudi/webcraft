@@ -1,17 +1,10 @@
 var router = require('express').Router()
-var passport = require('passport')
-var localStrategy = appRequire('app/auth/local-strategy').localStrategy
-
-passport.use(localStrategy)
+var passport = appRequire('app/init/passport')
 
 router.post('/session',
-  function (req, res, next) {
-    passport.authenticate('local', function (err, user) {
-      if (err) next(err)
-      req.user = user
-      next()
-    })(req, res, next)
-  },
+  passport.authenticate('local', {
+    failureRedirect: '/login'
+  }),
   function (req, res, next) {
     if (req.user) {
       res.cookie(process.env.JWT_COOKIE_KEY, req.user.getJWT(), {
@@ -19,7 +12,6 @@ router.post('/session',
       })
       return res.redirect('/')
     }
-    else return res.redirect('/login')
   })
 
 module.exports = router
