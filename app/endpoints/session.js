@@ -14,4 +14,9 @@ router.post('/session',
     }
   })
 
+router.delete('/session', function (req, res, next) {
+  res.clearCookie()
+  return res.redirect('/')
+})
+
 module.exports = router
