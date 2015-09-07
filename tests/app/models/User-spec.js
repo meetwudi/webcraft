@@ -8,6 +8,9 @@ describe('User Model', function () {
     dbTracker = require('mock-knex').getTracker()
     dbTracker.install()
   })
+  afterEach(function () {
+    dbTracker.uninstall()
+  })
 
   describe('._comparePassword', function () {
     it('should output true when raw password matches encrypted password', function (done) {
@@ -157,6 +160,14 @@ describe('User Model', function () {
 })
 
 describe('User Model', function () {
+  beforeEach(function () {
+    dbTracker = require('mock-knex').getTracker()
+    dbTracker.install()
+  })
+  afterEach(function () {
+    dbTracker.uninstall()
+  })
+
   describe('#validatePassword', function () {
     it('should resolve true when passwords match', function (done) {
       const password = 'abc'
@@ -185,9 +196,11 @@ describe('User Model', function () {
         query.method.should.equal('select')
         query.response([{ count: 1 }])
       })
-      new User().hasProjectName().then(function (hasProjectName) {
+      new User({ id: 1 }).hasProjectName('projc').then(function (hasProjectName) {
         hasProjectName.should.be.exactly(true)
         done()
+      }).catch(function (err) {
+        console.log(err)
       })
     })
 

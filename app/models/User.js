@@ -99,6 +99,9 @@ var User = bookshelf.Model.extend({ // prototype properties
    */
   registerUser: function (attrs, confirmedPassword) {
     return new Promise(function (resolve, reject) {
+      if (attrs['password'] !== confirmedPassword) {
+        reject(new Error('Password does not match confirmedPassword'))
+      }
       // TODO: investigate better coding style for this
       // Ensure username is unique
       User.count({ username: attrs.username })

@@ -8,6 +8,10 @@ describe('Project Model', function () {
     dbTracker = require('mock-knex').getTracker()
     dbTracker.install()
   })
+  afterEach(function () {
+    dbTracker.uninstall()
+  })
+
   describe('#_generateName', function () {
     it('should create a name correctly', function (done) {
       var mockedUser = {}

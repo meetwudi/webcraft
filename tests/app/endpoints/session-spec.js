@@ -9,6 +9,10 @@ describe('POST /endpoints/session', function () {
     dbTracker = require('mock-knex').getTracker()
     dbTracker.install()
   })
+  afterEach(function () {
+    dbTracker.uninstall()
+  })
+
   it('should store a valid jwt token in cookie when successful login', function (done) {
     var username = 'johnwu'
     var password = 'damn good password'

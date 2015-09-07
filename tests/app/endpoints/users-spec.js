@@ -2,19 +2,21 @@ var mknex = require('mock-knex')
 var request = require('supertest')
 var app = appRequire('app')
 var should = require('should')
-var dbTrakcer
+var dbTracker
 
 describe('users endpoint', function () {
   beforeEach(function () {
-    dbTrakcer = mknex.getTracker()
-    dbTrakcer.install()
+    dbTracker = mknex.getTracker()
+    dbTracker.install()
+  })
+  afterEach(function () {
+    dbTracker.uninstall()
   })
 
   describe('POST /users', function () {
     it('should redirect to /login when succesfully registered', function (done) {
       var inserted = false
-      dbTrakcer.on('query', function (query) {
-        console.log(query)
+      dbTracker.on('query', function (query) {
         if (query.method === 'insert') {
           inserted = true
           query.response(1)

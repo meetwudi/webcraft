@@ -9,6 +9,10 @@ describe('localStrategy _authenticateUser', function () {
     dbTracker = require('mock-knex').getTracker()
     dbTracker.install()
   })
+  afterEach(function () {
+    dbTracker.uninstall()
+  })
+
   it('should authenticate user when username and password are valid, otherwise not', function () {
     var mockedUsers = [
       { id: 2, username: 'Esther', password: bcrypt.hashSync('abcd') }

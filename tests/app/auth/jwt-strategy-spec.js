@@ -8,6 +8,9 @@ describe('jwtStrategy', function () {
     dbTracker = require('mock-knex').getTracker()
     dbTracker.install()
   })
+  afterEach(function () {
+    dbTracker.uninstall()
+  })
   describe('_authenticateUser', function () {
     it('should get user id from jwt payload and return the user model', function (done) {
       dbTracker.on('query', function (query) {
