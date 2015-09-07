@@ -1,9 +1,14 @@
 var User = appRequire('app/models/User')
-var dbTracker = require('mock-knex').getTracker()
 var bcrypt = require('bcrypt-nodejs')
 var should = require('should')
+var dbTracker
 
 describe('User Model', function () {
+  beforeEach(function () {
+    dbTracker = require('mock-knex').getTracker()
+    dbTracker.install()
+  })
+
   describe('._comparePassword', function () {
     it('should output true when raw password matches encrypted password', function (done) {
       const password = 'abc'
@@ -28,7 +33,6 @@ describe('User Model', function () {
 
   describe('.getUserByUsername', function () {
     it('should resolves a correct user if the username matches any user', function (done) {
-      dbTracker.install()
       const username = 'abc'
 
       User.getUserByUsername(username).then(function (user) {
@@ -49,8 +53,6 @@ describe('User Model', function () {
     })
 
     it('should resolves undefined if the username matches any user', function (done) {
-      dbTracker.install()
-
       User.getUserByUsername('abc').then(function (user) {
         should.not.exist(user)
         done()
@@ -64,10 +66,6 @@ describe('User Model', function () {
   })
 
   describe('.registerUser', function () {
-    beforeEach(function () {
-      dbTracker.install()
-    })
-
     it('should register user and return the user model when infos are valid', function (done) {
       var password = 'abcddd'
       var attrs = {
@@ -129,7 +127,6 @@ describe('User Model', function () {
     })
 
     it('should reject when username/password format is not correct', function (done) {
-      dbTracker.install()
       dbTracker.on('query', function (query) {
         if (query.sql.indexOf('count') > -1) {
           return query.response([{ count: 0 }])
@@ -184,7 +181,6 @@ describe('User Model', function () {
 
   describe('#hasProjectName', function () {
     it('should return true if the project name exists for the user', function (done) {
-      dbTracker.install()
       dbTracker.on('query', function (query) {
         query.method.should.equal('select')
         query.response([{ count: 1 }])
@@ -196,7 +192,6 @@ describe('User Model', function () {
     })
 
     it('should return false if the project name does not exist for the user', function (done) {
-      dbTracker.install()
       dbTracker.on('query', function (query) {
         query.method.should.equal('select')
         query.response([{ count: 0 }])

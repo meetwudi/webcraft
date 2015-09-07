@@ -13,7 +13,8 @@ var knexInstance = new Knex({
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    charset: process.env.DB_CHARSET
+    charset: process.env.DB_CHARSET,
+    port: process.env.DB_PORT
   }
 })
 

@@ -1,9 +1,13 @@
 var Project = appRequire('app/models/Project')
-var dbTracker = require('mock-knex').getTracker()
 var should = require('should')
 var dataRules = appRequire('app/config/data-rules')
+var dbTracker
 
 describe('Project Model', function () {
+  beforeEach(function () {
+    dbTracker = require('mock-knex').getTracker()
+    dbTracker.install()
+  })
   describe('#_generateName', function () {
     it('should create a name correctly', function (done) {
       var mockedUser = {}
@@ -25,7 +29,6 @@ describe('Project Model', function () {
 
   describe('#createProject', function () {
     it('should create a project with a random name (with specific length)', function (done) {
-      dbTracker.install()
       dbTracker.on('query', function (query) {
         if (query.method === 'insert') {
           return query.response([{ id: 1 }])

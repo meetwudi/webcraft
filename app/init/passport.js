@@ -1,7 +1,6 @@
 var passport = require('passport')
 var localStrategy = appRequire('app/auth/local-strategy').localStrategy
-var jwtStrategy = require('app/auth/jwt-strategy').jwtStrategy
-var User = appRequire('app/models/User')
+var jwtStrategy = appRequire('app/auth/jwt-strategy').jwtStrategy
 
 passport.use(localStrategy)
 passport.use(jwtStrategy)

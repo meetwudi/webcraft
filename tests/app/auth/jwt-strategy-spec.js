@@ -1,10 +1,9 @@
-var jwtStrategy = appRequire('app/auth/jwt-strategy').jwtStrategy
 var _authenticateUser = appRequire('app/auth/jwt-strategy')._authenticateUser
 var User = appRequire('app/models/User')
 var should = require('should')
 var dbTracker
 
-describe('jwtStrategy', function() {
+describe('jwtStrategy', function () {
   beforeEach(function () {
     dbTracker = require('mock-knex').getTracker()
     dbTracker.install()

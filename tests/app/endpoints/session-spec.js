@@ -1,15 +1,18 @@
-var dbTracker = require('mock-knex').getTracker()
 var app = appRequire('app')
 var request = require('supertest')
 var bcrypt = require('bcrypt-nodejs')
 var should = require('should')
+var dbTracker
 
 describe('POST /endpoints/session', function () {
+  beforeEach(function () {
+    dbTracker = require('mock-knex').getTracker()
+    dbTracker.install()
+  })
   it('should store a valid jwt token in cookie when successful login', function (done) {
     var username = 'johnwu'
     var password = 'damn good password'
     var encryptedPassword = bcrypt.hashSync(password)
-    dbTracker.install()
     dbTracker.on('query', function (query) {
       query.method.should.equal('select')
       query.response([ { id: 1, username: username, password: encryptedPassword } ])
@@ -35,7 +38,6 @@ describe('POST /endpoints/session', function () {
   it('should redirect to /login if user provides wrong password', function (done) {
     var username = 'johnwu'
     var password = 'damn good password'
-    dbTracker.install()
     dbTracker.on('query', function (query) {
       query.method.should.equal('select')
       query.response([ { id: 1, username: username, password: bcrypt.hashSync('something else') } ])

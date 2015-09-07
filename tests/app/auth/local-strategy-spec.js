@@ -1,12 +1,15 @@
 var localStrategy = appRequire('app/auth/local-strategy')
 var _authenticateUser = localStrategy._authenticateUser
 var bcrypt = require('bcrypt-nodejs')
-var dbTracker = require('mock-knex').getTracker()
+var dbTracker
 var should = require('should')
 
 describe('localStrategy _authenticateUser', function () {
-  it('should authenticate user when username and password are valid, otherwise not', function () {
+  beforeEach(function () {
+    dbTracker = require('mock-knex').getTracker()
     dbTracker.install()
+  })
+  it('should authenticate user when username and password are valid, otherwise not', function () {
     var mockedUsers = [
       { id: 2, username: 'Esther', password: bcrypt.hashSync('abcd') }
     ]
