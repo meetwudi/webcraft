@@ -28,5 +28,11 @@ node -r dotenv/config $(where db-migrate) up -e dev
 ### 测试
 
 ```
-gulp test
+NODE_ENV=test gulp test
+```
+
+单个测试文件测试
+
+```
+NODE_ENV=test mocha --require should --require ./global-bootstrap.js 测试文件名
 ```
