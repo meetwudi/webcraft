@@ -3,7 +3,8 @@ var passport = appRequire('app/init/passport')
 
 router.post('/session',
   passport.authenticate('local', {
-    failureRedirect: '/login'
+    failureRedirect: '/login',
+    session: false
   }),
   function (req, res, next) {
     if (req.user) {
