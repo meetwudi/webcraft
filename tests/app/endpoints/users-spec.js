@@ -27,12 +27,35 @@ describe('users endpoint', function () {
       })
       request(app)
         .post('/endpoints/users')
-        .send({ username: 'johnwu', password: 'abcdef' })
+        .send({ username: 'johnwu', password: 'abcdef', confirmed_password: 'abcdef' })
         .expect(302)
         .end(function (err, res) {
           should.not.exist(err)
           inserted.should.be.ok()
           res.header.location.should.equal('/login')
+          done()
+        })
+    })
+
+    it('should redirect to /register when not succesfully registered', function (done) {
+      var inserted = false
+      dbTracker.on('query', function (query) {
+        if (query.method === 'insert') {
+          inserted = true
+          query.response(1)
+        }
+        if (query.method === 'select') {
+          query.response([{count: 1}])
+        }
+      })
+      request(app)
+        .post('/endpoints/users')
+        .send({ username: 'johnwu', password: 'abcdef', confirmed_password: 'abcdef' })
+        .expect(302)
+        .end(function (err, res) {
+          should.not.exist(err)
+          inserted.should.not.be.ok()
+          res.header.location.should.equal('/register')
           done()
         })
     })
