@@ -14,4 +14,6 @@ router.post('/users', function (req, res, next) {
   })
 })
 
-module.exports = router
+module.exports = {
+  router: router
+}

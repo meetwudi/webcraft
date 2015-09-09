@@ -37,6 +37,7 @@
     "gulp-standard": "^5.1.0",
     "jsonwebtoken": "^5.0.5",
     "mock-knex": "^0.2.2",
+    "node-mocks-http": "^1.4.3",
     "should": "^7.1.0",
     "standard": "^5.1.1",
     "supertest": "^1.1.0"

@@ -1,6 +1,7 @@
 var router = require('express').Router()
 
-router.use(require('./session'))
-router.use(require('./users'))
+router.use(require('./session').router)
+router.use(require('./users').router)
+router.use(require('./projects').router)
 
 module.exports = router

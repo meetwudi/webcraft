@@ -10,6 +10,8 @@ var Promise = require('bluebird')
 var dataRules = appRequire('app/config/data-rules')
 var Checkit = require('checkit')
 var jwt = require('jsonwebtoken')
+var extend = require('extend')
+var UserMockExtension = appRequire('app/models/User_mock')
 var Project
 
 /**
@@ -123,6 +125,8 @@ var User = bookshelf.Model.extend({ // prototype properties
     password: ['required']
   })
 })
+
+User = User.extend(UserMockExtension.memberWide, UserMockExtension.classWide)
 
 User = bookshelf.model('User', User)
 Project = bookshelf.model('Project') || appRequire('app/models/Project')

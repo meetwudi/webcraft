@@ -7,6 +7,7 @@ var databaseConfig = appRequire('app/config/database')
 var randomString = require('randomstring')
 var dataRules = appRequire('app/config/data-rules')
 var Promise = require('bluebird')
+var ProjectMockExtension = appRequire('app/models/Project_mock')
 var User
 var Doc
 
@@ -64,6 +65,8 @@ var Project = bookshelf.Model.extend({
     })
   }
 })
+
+Project = Project.extend(ProjectMockExtension.memberWide, ProjectMockExtension.classWide)
 
 Project = bookshelf.model('Project', Project)
 User = bookshelf.model('User') || appRequire('app/models/User')
