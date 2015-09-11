@@ -1,5 +1,6 @@
 var router = require('express').Router()
 var User = appRequire('app/models/User')
+var passport = appRequire('app/init/passport')
 
 router.post('/users', function (req, res, next) {
   User.registerUser({
@@ -14,6 +15,17 @@ router.post('/users', function (req, res, next) {
   })
 })
 
+var middlewares = {
+  displayUserProfile: function (req, res, next) {
+    return req.user.then(function (user) {
+      res.json(user.serializeSafe())
+    }, next)
+  }
+}
+
+router.get('/profile', passport.authenticate('jwt'), middlewares.displayUserProfile)
+
 module.exports = {
-  router: router
+  router: router,
+  middlewares: middlewares
 }

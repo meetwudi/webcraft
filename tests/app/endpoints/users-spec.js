@@ -2,6 +2,9 @@ var mknex = require('mock-knex')
 var request = require('supertest')
 var app = appRequire('app')
 var should = require('should')
+var userEndpoints = appRequire('app/endpoints/users')
+var httpMocks = require('node-mocks-http')
+var User = appRequire('app/models/User')
 var dbTracker
 
 describe('users endpoint', function () {
@@ -56,6 +59,22 @@ describe('users endpoint', function () {
           should.not.exist(err)
           inserted.should.not.be.ok()
           res.header.location.should.equal('/register')
+          done()
+        })
+    })
+  })
+
+  describe('displayUserProfile middleware', function () {
+    it('should response with user profile without password', function (done) {
+      var displayUserProfileMiddleware = userEndpoints.middlewares.displayUserProfile
+      var request = httpMocks.createRequest()
+      var response = httpMocks.createResponse()
+      request.user = Promise.resolve(User.createDummyUser({ id: 1 }))
+      displayUserProfileMiddleware(request, response, function () {})
+        .then(function () {
+          var result = JSON.parse(response._getData())
+          result.should.have.properties(['id', 'username'])
+          result.should.not.have.property('password')
           done()
         })
     })
