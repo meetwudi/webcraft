@@ -4,6 +4,7 @@ var Project = appRequire('app/models/Project')
 var should = require('should')
 var projectEndpoints = appRequire('app/endpoints/projects')
 var databaseConfig = appRequire('app/config/database')
+var dataRules = appRequire('app/config/data-rules')
 var bluebird = require('bluebird')
 var dbTracker
 
@@ -29,7 +30,7 @@ describe('projects endpoint', function () {
         if (query.sql === 'select "projects".* from "projects" where "projects"."user_id" = ?') {
           query.response([
             { id: 1, user_id: 1, name: 'dummyproject' },
-            { id: 2, user_id: 1, name: 'dummyproject2'}
+            { id: 2, user_id: 1, name: 'dummyproject2' }
           ])
         }
       })
@@ -54,10 +55,16 @@ describe('projects endpoint', function () {
   })
 
   describe('createProject middleware', function () {
-    it('should resolve with the newly created project', function () {
+    it('should resolve with the newly created project', function (done) {
       dbTracker.on('query', function (query) {
-        if (query.sql === 'insert into "projects" default values returning "id"') {
-          query.response([{ id: 1 }])
+        if (query.sql === 'select count(*) as "count" from "projects"') {
+          query.response([{ count: 0 }])
+        }
+        if (query.sql === 'insert into "projects" ("name", "user_id") values (?, ?) returning "id"') {
+          query.response([1])
+        }
+        if (query.sql === 'update "projects" set "id" = ?, "user_id" = ? where "id" = ?') {
+          query.response(1)
         }
       })
 
@@ -72,6 +79,8 @@ describe('projects endpoint', function () {
         .then(function (project) {
           project.get('user_id').should.equal(1)
           project.get('id').should.equal(1)
+          project.get('name').should.be.an.instanceOf(String)
+          project.get('name').should.have.length(dataRules.DEFAULT_PROJECT_NAME_LENGTH)
           done()
         })
     })
@@ -110,7 +119,7 @@ describe('projects endpoint', function () {
       var httpRequest = httpMocks.createRequest()
       var httpResponse = httpMocks.createResponse()
       httpRequest.projects = Promise.resolve(projects)
-      displayProjectsMiddleware = projectEndpoints.middlewares.displayProjects
+      var displayProjectsMiddleware = projectEndpoints.middlewares.displayProjects
       displayProjectsMiddleware(httpRequest, httpResponse, function () { })
         .then(function () {
           httpResponse.statusCode.should.equal(200)
@@ -118,6 +127,30 @@ describe('projects endpoint', function () {
           result.should.have.lengthOf(2)
           done()
         })
+    })
+  })
+
+  describe('findUserProject middleware', function () {
+    it('should get the correct project', function (done) {
+      dbTracker.on('query', function (query) {
+        query.response([{id: 1, name: 'johnwuproject', user_id: 1}])
+      })
+      var user = User.createDummyUser({
+        id: 1
+      })
+      var httpRequest = httpMocks.createRequest()
+      var httpResponse = httpMocks.createResponse()
+      httpRequest.user = user
+      httpRequest.params = { id: 1 } // project id
+      var findUserProjectMiddleware = projectEndpoints.middlewares.findUserProject
+      findUserProjectMiddleware(httpRequest, httpResponse, function () { })
+        .then(function (project) {
+          should.exist(project)
+          project.get('id').should.equal(1)
+          project.get('user_id').should.equal(1)
+          project.get('name').should.equal('johnwuproject')
+          done()
+        }, done)
     })
   })
 })
