@@ -9,10 +9,10 @@ router.post('/users', function (req, res, next) {
   }, req.body['confirmed_password']).then(function () {
     res.redirect('/login')
   }, function (err) {
-    // TODO: add flash message here instead
-    console.log(err)
-    res.redirect('/register')
-  })
+      // TODO: add flash message here instead
+      console.log(err)
+      res.redirect('/register')
+    })
 })
 
 var middlewares = {

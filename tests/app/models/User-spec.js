@@ -152,9 +152,9 @@ describe('User Model', function () {
         })
         done()
       }, function (err) {
-        should.not.exist(err)
-        throw new Error('should ne be called')
-      })
+          should.not.exist(err)
+          throw new Error('should ne be called')
+        })
     })
   })
 })
