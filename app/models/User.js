@@ -49,6 +49,12 @@ var User = bookshelf.Model.extend({ // prototype properties
     return this.hasMany(Project)
   },
 
+  serializeSafe: function () {
+    var result = this.serialize()
+    delete result.password
+    return result
+  },
+
   /**
    *  Validate password for current user
    *

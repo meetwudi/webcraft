@@ -168,6 +168,14 @@ describe('User Model', function () {
     dbTracker.uninstall()
   })
 
+  describe('#serializeSafe', function () {
+    it('should return user\'s serialized object without password', function () {
+      var user = User.createDummyUser()
+      var result = user.serializeSafe()
+      result.should.not.have.property('password')
+    })
+  })
+
   describe('#validatePassword', function () {
     it('should resolve true when passwords match', function (done) {
       const password = 'abc'
