@@ -10,7 +10,6 @@ var Promise = require('bluebird')
 var dataRules = appRequire('app/config/data-rules')
 var Checkit = require('checkit')
 var jwt = require('jsonwebtoken')
-var extend = require('extend')
 var UserMockExtension = appRequire('app/models/User_mock')
 var Project
 

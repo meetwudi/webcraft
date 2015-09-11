@@ -35,7 +35,6 @@ describe('Project Model', function () {
   describe('#createProject', function () {
     it('should create a project with a random name (with specific length)', function (done) {
       dbTracker.on('query', function (query) {
-        console.log(query.sql)
         if (query.sql === 'select count(*) as "count" from "projects"') {
           query.response([{ count: 0 }])
         }
@@ -45,7 +44,6 @@ describe('Project Model', function () {
       })
       Project.createProject(User.forge({ id: 1 }))
         .then(function (project) {
-          console.log(project.serialize())
           should.exist(project)
           project.should.be.an.instanceOf(Project)
           project.get('name').should.be.ok()

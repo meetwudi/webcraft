@@ -5,15 +5,10 @@ var should = require('should')
 var projectEndpoints = appRequire('app/endpoints/projects')
 var databaseConfig = appRequire('app/config/database')
 var dataRules = appRequire('app/config/data-rules')
-var bluebird = require('bluebird')
+var Promise = require('bluebird')
 var dbTracker
 
 describe('projects endpoint', function () {
-  before(function () {
-    // Ensure UserMockExtension is installed
-    should.exist(User.createDummyUser)
-  })
-
   beforeEach(function () {
     dbTracker = require('mock-knex').getTracker()
     dbTracker.install()
@@ -22,7 +17,6 @@ describe('projects endpoint', function () {
   afterEach(function () {
     dbTracker.uninstall()
   })
-
 
   describe('getProjects middleware', function () {
     it('should resolve with all projects of the current user', function (done) {

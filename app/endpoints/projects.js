@@ -36,7 +36,7 @@ var middlewares = {
   findUserProject: function (req, res, next) {
     var projectId = req.params.id
     // TODO: refactor into models
-    var project = req.user.projects().query({ where: {id: projectId }}).fetchOne()
+    var project = req.user.projects().query({ where: { id: projectId } }).fetchOne()
     req.project = Promise.resolve(project)
     next()
     return req.project
