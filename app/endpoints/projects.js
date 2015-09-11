@@ -14,6 +14,7 @@ var middlewares = {
   },
 
   destroyProject: function (req, res, next) {
+    // TODO: test this
     req.project.then(function (project) {
         if (project) return project.destroy()
       }).then(function () {
