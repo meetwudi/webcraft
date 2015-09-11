@@ -79,7 +79,7 @@ describe('Projects-Docs endpoints', function () {
           var docsArray = docs.serialize()
           docsArray.should.be.an.instanceOf(Array)
           docsArray.should.have.length(2)
-          docsArray.forEach(function(docObject) {
+          docsArray.forEach(function (docObject) {
             docObject.should.have.properties(databaseConfig.DOCS_TABLE_COLUMNS)
           })
           done()
