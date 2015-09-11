@@ -50,9 +50,9 @@ var middlewares = {
   }
 }
 
-router.get('/project', middlewares.getProjects, middlewares.displayProjects)
-router.post('/project', middlewares.createProject, middlewares.displayProject)
-router.delete('/project/:id', middlewares.findUserProject, middlewares.destroyProject)
+router.get('/projects', middlewares.getProjects, middlewares.displayProjects)
+router.post('/projects', middlewares.createProject, middlewares.displayProject)
+router.delete('/projects/:id', middlewares.findUserProject, middlewares.destroyProject)
 
 module.exports = {
   middlewares: middlewares,
