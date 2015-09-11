@@ -1,4 +1,5 @@
 var Project = appRequire('app/models/Project')
+var User = appRequire('app/models/User')
 var should = require('should')
 var dataRules = appRequire('app/config/data-rules')
 var dbTracker
@@ -34,27 +35,25 @@ describe('Project Model', function () {
   describe('#createProject', function () {
     it('should create a project with a random name (with specific length)', function (done) {
       dbTracker.on('query', function (query) {
-        if (query.method === 'insert') {
-          return query.response([{ id: 1 }])
-        }
-        if (query.sql === 'select "users".* from "users" where "users"."id" = ? limit ?') {
-          return query.response([{ id: 1, username: 'abc' }])
-        }
+        console.log(query.sql)
         if (query.sql === 'select count(*) as "count" from "projects"') {
-          return query.response([{ count: 0 }])
+          query.response([{ count: 0 }])
+        }
+        if (query.sql === 'insert into "projects" ("name", "user_id") values (?, ?) returning "id"') {
+          query.response([1])
         }
       })
-      Project.createProject({
-        user_id: 1
-      }).then(function (project) {
-        should.exist(project)
-        project.should.be.an.instanceOf(Project)
-        project.get('name').should.be.ok()
-        project.get('name').should.have.length(dataRules.DEFAULT_PROJECT_NAME_LENGTH)
-        done()
-      }, function (err) {
-        should.not.exist(err)
-      })
+      Project.createProject(User.forge({ id: 1 }))
+        .then(function (project) {
+          console.log(project.serialize())
+          should.exist(project)
+          project.should.be.an.instanceOf(Project)
+          project.get('name').should.be.ok()
+          project.get('name').should.have.length(dataRules.DEFAULT_PROJECT_NAME_LENGTH)
+          done()
+        }, function (err) {
+          should.not.exist(err)
+        })
     })
   })
 })

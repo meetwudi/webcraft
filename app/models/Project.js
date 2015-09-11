@@ -8,6 +8,7 @@ var randomString = require('randomstring')
 var dataRules = appRequire('app/config/data-rules')
 var Promise = require('bluebird')
 var ProjectMockExtension = appRequire('app/models/Project_mock')
+var extend = require('extend')
 var User
 var Doc
 
@@ -44,25 +45,20 @@ var Project = bookshelf.Model.extend({
    * Factory function to create a Project
    *
    * @public
+   * @param {User} user - User who owns the project
    * @param  {object} attrs - Project attributes
    * @return {Promise}
    */
-  createProject: function (attrs) {
-    return new Promise(function (resolve, reject) {
-      // Find the user
-      new User({ id: attrs['user_id'] })
-        .fetch()
-        .then(function (user) {
-          return Project._generateName(user)
-        }, reject)
-        // Assign name and save project
-        .then(function (projectName) {
-          attrs['name'] = projectName
-          var project = new Project(attrs)
-          return project.save()
-        }, reject)
-        .then(resolve, reject)
-    })
+  createProject: function (user, attrs) {
+    return Project._generateName(user)
+      .then(function (projectName) {
+        attrs = extend(attrs, {
+          name: projectName,
+          user_id: user.get('id')
+        })
+        var project = new Project(attrs)
+        return project.save()
+      })
   }
 })
 
