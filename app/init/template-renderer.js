@@ -1,7 +1,9 @@
 var exphbs = require('express-handlebars')
 
 var hbs = exphbs.create({
-  helpers: {},
+  helpers: {
+    assetPath: require('./template-helpers/asset-path')
+  },
   extname: '.hbs'
 })
 
