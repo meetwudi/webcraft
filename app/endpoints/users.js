@@ -6,12 +6,13 @@ router.post('/users', function (req, res, next) {
   User.registerUser({
     username: req.body.username,
     password: req.body.password
-  }, req.body['confirmed_password']).then(function () {
-    res.redirect('/login')
+  }, req.body['confirmed_password']).then(function (user) {
+    return res.status(201).json(user.serializeSafe())
   }, function (err) {
       // TODO: add flash message here instead
-      console.log(err)
-      res.redirect('/register')
+      return res.status(400).json({
+        error: err.message
+      })
     })
 })
 

@@ -17,7 +17,7 @@ describe('users endpoint', function () {
   })
 
   describe('POST /users', function () {
-    it('should redirect to /login when succesfully registered', function (done) {
+    it('should return user json when succesfully registered', function (done) {
       var inserted = false
       dbTracker.on('query', function (query) {
         if (query.method === 'insert') {
@@ -31,16 +31,17 @@ describe('users endpoint', function () {
       request(app)
         .post('/endpoints/users')
         .send({ username: 'johnwu', password: 'abcdef', confirmed_password: 'abcdef' })
-        .expect(302)
+        .expect(201)
         .end(function (err, res) {
           should.not.exist(err)
           inserted.should.be.ok()
-          res.header.location.should.equal('/login')
+          res.body.should.have.property('username')
+          res.body['username'].should.equal('johnwu')
           done()
         })
     })
 
-    it('should redirect to /register when not succesfully registered', function (done) {
+    it('should return error message when not succesfully registered', function (done) {
       var inserted = false
       dbTracker.on('query', function (query) {
         if (query.method === 'insert') {
@@ -54,11 +55,12 @@ describe('users endpoint', function () {
       request(app)
         .post('/endpoints/users')
         .send({ username: 'johnwu', password: 'abcdef', confirmed_password: 'abcdef' })
-        .expect(302)
+        .expect(400)
         .end(function (err, res) {
           should.not.exist(err)
           inserted.should.not.be.ok()
-          res.header.location.should.equal('/register')
+          res.body.should.have.property('error')
+          res.body['error'].should.equal('Username exists')
           done()
         })
     })
