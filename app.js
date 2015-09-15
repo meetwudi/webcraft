@@ -11,12 +11,14 @@ var bodyParser = require('body-parser')
 var session = require('express-session')
 var endpointsRouter = appRequire('app/endpoints')
 var pagesRouter = appRequire('app/pages')
+var templateRenderer = appRequire('app/init/template-renderer')
 
 var app = express()
 
 // view engine setup
 app.set('views', path.join(__dirname, 'app/templates'))
-app.set('view engine', 'hbs')
+app.engine('.hbs', templateRenderer.engine)
+app.set('view engine', '.hbs')
 
 // uncomment after placing your favicon in /public
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))

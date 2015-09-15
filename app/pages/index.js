@@ -1,11 +1,7 @@
 var router = require('express').Router()
 
 router.get('/', function (req, res) {
-  res.render('empty')
-})
-
-router.get('/login', function (req, res) {
-  res.render('empty')
+  res.render('index')
 })
 
 module.exports = router
