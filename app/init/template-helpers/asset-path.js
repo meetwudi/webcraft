@@ -1,8 +1,7 @@
 var url = require('url')
 
 function assetPath (pathRelatedToAssets) {
-  console.log(pathRelatedToAssets)
-  if (process.env.ASSET_DEV) {
+  if (parseInt(process.env.ASSET_DEV) === 1) {
     return url.format({
       protocal: process.env.ASSET_PROTOCAL,
       hostname: process.env.ASSET_HOSTNAME,
