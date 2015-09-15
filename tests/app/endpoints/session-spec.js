@@ -13,7 +13,7 @@ describe('POST /endpoints/session', function () {
     dbTracker.uninstall()
   })
 
-  it('should store a valid jwt token in cookie when successful login', function (done) {
+  it('should return a valid jwt token when successful login', function (done) {
     var username = 'johnwu'
     var password = 'damn good password'
     var encryptedPassword = bcrypt.hashSync(password)
@@ -28,18 +28,18 @@ describe('POST /endpoints/session', function () {
         password: password
       })
       // Redirected
-      .expect(302)
+      .expect(200)
       .end(function (err, res) {
         should.not.exist(err)
-        res.header.location.should.equal('/')
-        res.header['set-cookie'].should.be.ok()
-        res.header['set-cookie'][0].should.match(/^jwt/)
-        res.header['set-cookie'][0].should.match(/HttpOnly/)
+        var jwtobj = res.body
+        should.exist(jwtobj)
+        jwtobj.should.have.property('jwt')
+        jwtobj['jwt'].should.be.an.instanceOf(String)
         done()
       })
   })
 
-  it('should redirect to /login if user provides wrong password', function (done) {
+  it('should return 401 if user provides wrong password', function (done) {
     var username = 'johnwu'
     var password = 'damn good password'
     dbTracker.on('query', function (query) {
@@ -52,16 +52,14 @@ describe('POST /endpoints/session', function () {
         username: username,
         password: password
       })
-      // Redirected
-      .expect(302)
+      .expect(401)
       .end(function (err, res) {
         should.not.exist(err)
-        res.header.location.should.equal('/login')
         done()
       })
   })
 
-  it('should redirect to /login if user provides wrong username', function (done) {
+  it('should return 401 if user provides wrong username', function (done) {
     var username = 'johnwu'
     var password = 'damn good password'
     dbTracker.on('query', function (query) {
@@ -74,11 +72,9 @@ describe('POST /endpoints/session', function () {
         username: username,
         password: password
       })
-      // Redirected
-      .expect(302)
+      .expect(401)
       .end(function (err, res) {
         should.not.exist(err)
-        res.header.location.should.equal('/login')
         done()
       })
   })
